@@ -1,0 +1,9 @@
+.THIS .IconHide {
+  display: none;
+}
+.THIS .TableHead:hover .IconHide {
+  display: inline-block;
+}
+.THIS .TableHead {
+  cursor: context-menu;
+}

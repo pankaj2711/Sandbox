@@ -1,0 +1,105 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" Controller="TrainingStatusCC" access="global" >
+    <aura:attribute name="trainings" type="New_Training__c[]" default=""/>
+    <aura:attribute name="selectedValue" type="String" access="PRIVATE"/>
+    <aura:attribute name="New_Training_Plan__c" type="New_Training_Plan__c[]" default=""/>
+    <aura:attribute name="Trainer_Name" type="String" default=""/>
+    <aura:attribute name="Training_Start_Date" type="Date" default=""/>
+    <aura:attribute name="No_Of_Days" type="Integer" default=""/>
+    <aura:attribute name="Days_Completed" type="Integer" default=""/>
+    <aura:attribute name="Total_Trainees" type="Integer" default="0"/>
+    <aura:attribute name="flag" type="Boolean" default="false"/>
+    <aura:attribute name="Pending" type="String" default="Pending"/>    
+    <aura:attribute name="Total_Evaluation_Completed" type="Integer" default="0"/>
+    <aura:attribute name="Total_Evaluation_Scheduled" type="Integer" default="0"/>
+    <aura:attribute type="Boolean" name="sortAsc" />
+    <aura:attribute type="String" name="sortField" default="true" />
+    <aura:attribute type="Boolean" name="noPlan" default="false" />
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <lightning:navigation aura:id="navService" />
+    <lightning:card footer="">
+        <div style="font-size:20px;font-weight:bold;margin-left:20px;" class="slds-align_absolute-center">
+            Current Training Status
+        </div>
+        
+        <div class="slds-align_absolute-center" style="font-size:14px;margin-left:20px;">
+            <lightning:select class="select-auto-width" name="select"  value="{!v.selectedValue}"  required="true" onchange="{!c.handelTrainingName}" >
+                <option text="Please Select training"></option>
+                <aura:iteration items="{!v.trainings}" var="training">
+                    <option text="{!training.Name}" value="{!training.Id}" selected="{!training.selected}" ></option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+    </lightning:card>
+    <div class="slds-form-element">
+        <aura:if isTrue="{!v.flag}">
+            <table class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols">
+                <tr>
+                    <th scope="col" class="slds-text-align_right"><b>Trainer Name</b> </th>
+                    <td scope="col">{!v.Trainer_Name}</td>    
+                    <th scope="col"><div class="slds-truncate slds-text-align_right"><b>Training Start Date</b></div></th>
+                    <td scope="col" class="slds-text-align_left">{!v.Training_Start_Date}</td>   
+                </tr>
+                <tr>
+                    <th scope="col" class="slds-text-align_right"><b>No of Days</b></th>
+                    <td scope="col">{!v.No_Of_Days}</td>   
+                    <th scope="col"><b><div class="slds-truncate slds-text-align_right">Days Completed</div> </b></th>
+                    <td scope="col" class="slds-text-align_left">{!v.Days_Completed}</td> 
+                </tr>  
+                <tr>
+                    <th class="slds-text-align_right" ><b>Trainee Details</b></th>
+                    <td scope="col"><lightning:button variant="base" label="Trainee Details" onclick="{!c.callTrainineeComp}"/></td>   
+                    <td scope="col" class="slds-text-align_right"><b>Total Number of Trainees</b> </td>
+                    <td scope="col" class="slds-text-align_left">{!v.Total_Trainees}</td> 
+                </tr> 
+                <tr>
+                    <th class="slds-text-align_right" ><b>Total Evaluation Scheduled</b></th>
+                    <td scope="col">{!v.Total_Evaluation_Scheduled}</td>             	
+                    <td scope="col"><b><div class="slds-truncate slds-text-align_right">Total Evaluation Completed</div></b> </td>
+                    <td scope="col">{!v.Total_Evaluation_Completed}</td> 
+                </tr> 
+            </table>
+            <aura:if isTrue="{!v.noPlan}">
+                <div class="NoTraining">No Training Plan</div>
+                <aura:set attribute="else">
+                    <table class="slds-table slds-table_bordered slds-table_striped " style="border: 1px solid rgb(217, 219, 221);"> 
+                        <thead>    
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate">Sr. No</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Topic Name">Topic Name</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Status">Status</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Completetion Date">Completetion Date</div>
+                                </th>              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.New_Training_Plan__c}" var="trainingTopics" indexVar="index">
+                                <tr class="slds-hint-parent">
+                                    <td> <div class="slds-truncate">{!index+1}</div></td>
+                                    <td><div class="slds-truncate">{!trainingTopics.Name}</div></td>
+                                    <aura:if isTrue="{!v.Pending == trainingTopics.Status__c}">
+                                        <td class="pendingStatus"><div class="slds-truncate">{!trainingTopics.Status__c}</div></td>
+                                        <aura:set attribute="else">
+                                            <td class="completedStatus"><div class="slds-truncate">{!trainingTopics.Status__c}</div></td>
+                                        </aura:set>
+                                    </aura:if>
+                                    
+                                    <td><div class="slds-truncate">{!trainingTopics.Completion_Date__c}</div></td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>                                                                  
+                    </table>
+                </aura:set>
+            </aura:if>
+        </aura:if>
+    </div>
+    
+</aura:component>

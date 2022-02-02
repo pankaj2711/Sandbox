@@ -1,0 +1,144 @@
+<aura:component controller="CurrentTraineeList" implements="force:appHostable,flexipage:availableForAllPageTypes">
+    <aura:attribute name="lstTrainee" type="Trainee_Participate__c[]" />
+    <aura:attribute name="Training_Name" type="String" default=""/>
+    <aura:attribute type="Boolean" name="sortAsc" />
+    <aura:attribute type="String" name="sortField" default="true" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <br/>
+    <br/>
+    <lightning:card>
+        <div style="font-size:20px;font-weight:bold;margin-left:20px;" class="slds-align_absolute-center">
+            Current Trainee List
+        </div>
+        <br/>
+        <br/>
+            <table class="slds-table slds-table_bordered slds-table_striped slds-max-medium-table_stacked" style="border: 1px solid rgb(217, 219, 221);width:100%"> 
+            <thead>
+                <tr class="slds-text-heading_label">
+					<th scope="col">
+                        <div class="slds-truncate" title="Sr. No">Sr. No.</div>
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByName}">
+                        <div class="slds-truncate" title="Trainee Name">Trainee Name
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                            </div>
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByLocation}">
+                        <div class="slds-truncate" title="Office-Location">Office-Location
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>      
+                            </div>
+                    </th>   
+                    <th scope="col" class="TableHead" onclick="{!c.sortByBadges}">
+                        <div class="slds-truncate" title="Office-Location">Trailhead Badges
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>      
+                            </div>
+                    </th>
+                    <!--<th scope="col">
+                        <div class="slds-truncate" title="Trailhead Profile">Trailhead Profile</div>
+                    </th>-->
+                    <th scope="col" class="TableHead" onclick="{!c.sortByEvaluation}">
+                        <div class="slds-truncate" title="Trailhead Profile">Evaluation Performance
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                    </div>
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByGenPerformance}">
+                        <div class="slds-truncate" title="Trailhead Profile">General Awareness
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                            </div>
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByCompetency1}">
+                        <div class="slds-truncate" title="Competency 1">Competency 1 
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                            </div>
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByCompetency2}">
+                        <div class="slds-truncate" title="Competency 2">Competency 2
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                            </div>
+
+                    </th>
+                    <th scope="col" class="TableHead" onclick="{!c.sortByTraining}">
+                        <div class="slds-truncate" title="Training Name">Training Name 
+                        <aura:if isTrue="{!v.sortAsc}">
+                  			<lightning:icon iconName="utility:arrowup" size="xx-small" disabled="" class="IconHide" />
+                  			<aura:set attribute="else">
+                    		<lightning:icon iconName="utility:arrowdown" size="xx-small" disabled="" class="IconHide"/>
+                  			</aura:set>
+                		</aura:if>
+                            </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Use the Apex model and controller to fetch server side data -->
+                <aura:iteration items="{!v.lstTrainee}" var="Trainee_Participate" indexVar="index">
+                    <tr>
+						<td>
+                            <div class="slds-truncate" title="{!Trainee_Name__c}">{!index+1}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Name__c}">{!Trainee_Participate.Trainee_Name__c}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Office_Location__c}">{!Trainee_Participate.Office_Location__c}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Trailhead_Profile__c}">{!Trainee_Participate.Trailhead_Badges__c}</div>
+                        </td>
+                         <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Trailhead_Profile__c}">{!Trainee_Participate.Evaluation_Performance__c}%</div>
+                        </td>
+                         <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Trailhead_Profile__c}">{!Trainee_Participate.General_Awareness_Performance__c}%</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Competency_1__c}">{!Trainee_Participate.Competency_1__c}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Competency_2__c}">{!Trainee_Participate.Competency_2__c}</div>
+                        </td>
+                        <td>
+                            <div class="slds-truncate" title="{!Trainee_Participate.Training_Name__c}">{!Trainee_Participate.Training_Name__c}</div>
+                        </td>
+
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+</aura:component>

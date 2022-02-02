@@ -1,0 +1,42 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="CurrentTraineeAttendance">
+
+    <!--Declare Event Handlers-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" description="Call doInit function on component load to get picklist values" />
+
+    <!--Declare Attributes-->
+    <aura:attribute name="PresentAttendeesList" type="Trainee_Participate__c[]" default="[]" description="Present Attendees" />
+    <aura:attribute name="AbsentAttendeesList" type="Trainee_Participate__c[]" default="[]" description="Absent Attendees" />
+    <aura:attribute name="selectedValue" type="String" access="global" />
+    <aura:attribute name="trainings" type="Trainee_Participate__c[]" default="" />
+    <aura:attribute name="today" type="String" default="" />
+    <aura:attribute name="options" type="List" default="[]"/>
+    <aura:attribute name="values" type="List" default="[]"/>
+	<aura:attribute name="presentIds" type="List" default="[]"/>
+    
+    <lightning:card footer="">
+        <div style="font-size:20px;font-weight:bold;margin-left:20px;" class="slds-align_absolute-center">
+            Attendance 
+        </div>
+
+        <div class="slds-align_absolute-center" style="font-size:14px;margin-left:20px;">
+            <lightning:select class="select-auto-width" name="select" value="{!v.selectedValue}" label="Training Type" required="true" onchange="{!c.handelTrainingName}">
+                <option text="Please Select training"></option>
+                <aura:iteration items="{!v.trainings}" var="training">
+                    <option text="{!training.Name}" value="{!training.Id}" selected="{!training.selected}"></option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <br/>
+
+        <div class="slds-align_absolute-center" style="font-size:14px;margin-left:20px;">
+            <ui:inputDate aura:id="expdate" label="Attendance's Date" class="field" value="{!v.today}" displayDatePicker="true" />
+        </div>
+    
+
+    <div class="slds-m-around_xx-large">
+        <lightning:dualListbox aura:id="SelectTrainee" name="Trainee" label="Select Trainees" sourceLabel="Present Trainees" selectedLabel="Absent Trainees" options="{!v.PresentAttendeesList}" value="{!v.values}" onchange="{!c.handlePresentAttendeesChange}"/>
+        <br/>
+        <lightning:button class="slds-align_absolute-center" variant="brand" label="Submit" onclick="{!c.storeAttendance}" />
+    </div>
+        </lightning:card>
+</aura:component>

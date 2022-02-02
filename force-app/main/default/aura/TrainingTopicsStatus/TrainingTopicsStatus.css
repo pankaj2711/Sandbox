@@ -1,0 +1,18 @@
+.THIS .pendingStatus {
+    color : rgb(156, 0, 6);
+    font-style:bold
+}
+.THIS .completedStatus {
+    color : rgb(0,97,0);
+    font-style:bold
+}
+.THIS .select-auto-width > .slds-form-element__control > .slds-select_container{
+    display: inline-block;
+}
+.THIS .NoTraining{
+    color: red;
+    font-size: large;
+    text-align: center;
+    margin: 48px;
+    font-weight: bold;
+}
