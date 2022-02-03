@@ -15,6 +15,7 @@
                     record = result[i];
                     var subData = {
                         "ID": record.Id,
+                        "Trainee_Id" : record.Trainee_Name__c,
                         "Trainee_Name__c": record.Trainee_Name__r.Name,
                         "Trailhead_Profile__c": record.Trainee_Name__r.Trailhead_Profile__c,
                         "Trailhead_Badges__c": record.Trainee_Name__r.Trailhead_Badges__c,
@@ -25,10 +26,17 @@
                         "Competency_2__c": record.Trainee_Name__r.Competency_2__c,
                         "Training_Name__c": record.Training_Name__r.Name
                     };
-                    Trainee_detail.push(subData);
+                    const found = Trainee_detail.some(el => el.Trainee_Id === subData["Trainee_Id"]);
+                    if (!found) 
+                        Trainee_detail.push(subData);
+                    else
+                    {
+                        var trainee_index = Trainee_detail.findIndex(obj => obj.Trainee_Id === subData["Trainee_Id"]);
+                        //trainee_data.Training_Name__c = trainee_data.Training_Name__c +' , '+subData.Training_Name__c;       
+                        Trainee_detail[trainee_index].Training_Name__c= Trainee_detail[trainee_index].Training_Name__c + ',' +subData["Training_Name__c"];
+                    }
                 }
                 component.set('v.lstTrainee', Trainee_detail);
-                console.log(Trainee_detail);
             } else if (state === "ERROR") {
                 var errors = response.getError();
                 if (errors) {
@@ -40,7 +48,7 @@
                 }
             }
         });
-
+        
         $A.enqueueAction(action);
     },
     
